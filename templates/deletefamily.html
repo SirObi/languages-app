@@ -5,8 +5,8 @@
     <title>Delete a language family</title>
   </head>
   <body>
-    <h1>Are you sure you want to delete the {{language_families[family_id]['name']}} language family?</h1>
-    <form action = '{{url_for('deleteLanguageFamily', family_id=family_id)}}' method ='POST'>
+    <h1>Are you sure you want to delete the {{family['name']}} language family?</h1>
+    <form action = '{{url_for('deleteLanguageFamily', family_id=family['id'])}}' method ='POST'>
       <input type='submit' value='Yes'>
       <br><br>
     </form>

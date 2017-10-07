@@ -12,22 +12,22 @@ language_families = [
     {'id': 3, 'name': 'Slavic', 'description': 'Slavic languages are so much fun',
     'creator_id': 1}]
 
-languages = [{'id': 0, 'name': 'English', 'language_family': 1,
+languages = [{'id': 1, 'name': 'English', 'family_id': 1,
             'description': 'English is a super cool and old language',
             'creator_id': 1},
-            {'id': 1, 'name': 'German', 'language_family': 1,
+            {'id': 2, 'name': 'German', 'family_id': 1,
             'description': 'German is a super cool and old language',
             'creator_id': 1},
-            {'id': 2, 'name': 'Italian', 'language_family': 2,
+            {'id': 3, 'name': 'Italian', 'family_id': 2,
             'description': 'Italian is a super cool and old language',
             'creator_id': 1},
-            {'id': 3, 'name': 'French', 'language_family': 2,
+            {'id': 4, 'name': 'French', 'family_id': 2,
             'description': 'French is a super cool and old language',
             'creator_id': 1},
-            {'id': 4, 'name': 'Russian', 'language_family': 3,
+            {'id': 5, 'name': 'Russian', 'family_id': 3,
             'description': 'Russian is a super cool and old language',
             'creator_id': 1},
-            {'id': 5, 'name': 'Polish', 'language_family': 3,
+            {'id': 6, 'name': 'Polish', 'family_id': 3,
             'description': 'Polish is a super cool and old language',
             'creator_id': 1}]
 
@@ -104,6 +104,7 @@ for language in languages:
     l = Language()
     l.name = language['name']
     l.description = language['description']
+    l.family_id = language['family_id']
     l.creator_id = language['creator_id']
     session.add(l)
     session.commit()

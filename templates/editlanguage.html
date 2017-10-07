@@ -5,8 +5,8 @@
     <title>Edit a language</title>
   </head>
   <body>
-    <h1>Here you can edit {{languages[language_id]['name']}} language.</h1>
-    <form action='{{url_for('editLanguage', family_id=family_id, language_id=language_id)}}' method ='POST'>
+    <h1>Here you can edit {{language['name']}} language.</h1>
+    <form action='{{url_for('editLanguage', family_id=family_id, language_id=language['id'])}}' method ='POST'>
       <input type='text' placeholder='name'>
       <input type='submit' value='Submit'>
       <br><br>
