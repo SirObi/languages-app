@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Learn more about {{languages[language_id]['name']}} language</title>
+  </head>
+  <body>
+    <a href='{{url_for('showLanguageFamily', family_id=family_id)}}'>Back to language family page</a>
+    <header>
+      <p>{{languages[language_id]['description']}}</p>
+    </header>
+    <section id="language-trivia">
+      {% for trivium in languages[language_id]['trivia'] %}
+      <p>{{trivium['text']}}</p>
+      {% endfor %}
+      {% for tip in languages[language_id]['tips'] %}
+      <p>{{tip['text']}}</p>
+      {% endfor %}
+      {% for resource in languages[language_id]['learning-resources'] %}
+      <p>{{resource['text']}}</p>
+      {% endfor %}
+    </section>
+
+  </body>
+</html>

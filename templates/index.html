@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>The Language App - share your passion!</title>
+  </head>
+  <body>
+    <header>
+      <a href='{{url_for('showLoginPage')}}'>Login</a>
+      <h1>Welcome, user!</h1>
+      <p>Pick a language family you are interested in.</p>
+    </header>
+    <section id="language-families">
+      <ul>
+      {% for family in language_families %}
+      <li><a href='{{url_for('showLanguageFamily', family_id=family['id'])}}'>{{family['name']}}</a></li>
+      {% endfor %}
+    </ul>
+      <a href='{{url_for('addLanguageFamily')}}'>Add new language family</a>
+    </section>
+  </body>
+</html>

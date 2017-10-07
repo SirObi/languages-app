@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Learn more about {{language_families[family_id]['name']}} languages</title>
+  </head>
+  <body>
+    <a href='{{url_for('showMainPage')}}'>Back to main page</a>
+    <header>
+      <p>{{language_families[family_id]['description']}}</p>
+    </header>
+    <section id="languages">
+      <ul>
+      {% for language in languages %}
+      {% if language['language_family'] == family_id %}
+      <li><a href='{{url_for('showLanguage', family_id=family_id, language_id=language['id'])}}'>{{language['name']}}</a></li>
+        <ul>
+          <li><a href='{{url_for('editLanguage', family_id=family_id, language_id=language['id'])}}'>Edit this language</a></li>
+          <li><a href='{{url_for('deleteLanguage', family_id=family_id, language_id=language['id'])}}'>Delete this language</a></li>
+        </ul>
+      {% endif %}
+      {% endfor %}
+    </ul>
+    </section>
+    <a href='{{url_for('addLanguage', family_id=family_id)}}'>Add new language</a>
+    <br><br>
+    <a href='{{url_for('editLanguageFamily', family_id=family_id)}}'>Edit this language family</a>
+    <br>
+    <a href='{{url_for('deleteLanguageFamily', family_id=family_id)}}'>Delete this language family</a>
+  </body>
+</html>
