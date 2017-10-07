@@ -4,6 +4,24 @@ from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
+class User(Base):
+    __tablename__ = 'users'
+
+    id = Column(
+    Integer, primary_key = True)
+
+    first_name = Column(
+    String(100), nullable = False)
+
+    last_name = Column(
+    String(100), nullable = False)
+
+    picture_url = Column(
+    String(100), nullable = False)
+
+    password_hash = Column(
+    String(100), nullable = False)
+
 class LanguageFamily(Base):
     __tablename__ = 'language_families'
 
@@ -19,7 +37,7 @@ class LanguageFamily(Base):
     creator_id = Column(
     Integer, ForeignKey('users.id'))
 
-    creator = relationship('users')
+    creator = relationship(User)
 
 class Language(Base):
     __tablename__ = 'languages'
@@ -41,7 +59,7 @@ class Language(Base):
     creator_id = Column(
     Integer, ForeignKey('users.id'))
 
-    creator = relationship('users')
+    creator = relationship(User)
 
 class LanguageTrivium(Base):
     __tablename__ = 'language_trivia'
@@ -60,7 +78,7 @@ class LanguageTrivium(Base):
     creator_id = Column(
     Integer, ForeignKey('users.id'))
 
-    creator = relationship('users')
+    creator = relationship(User)
 
 
 class LearningTip(Base):
@@ -80,7 +98,7 @@ class LearningTip(Base):
     creator_id = Column(
     Integer, ForeignKey('users.id'))
 
-    creator = relationship('users')
+    creator = relationship(User)
 
 
 class LearningResource(Base):
@@ -103,25 +121,8 @@ class LearningResource(Base):
     creator_id = Column(
     Integer, ForeignKey('users.id'))
 
-    creator = relationship('users')
+    creator = relationship(User)
 
-class User(Base):
-    __tablename__ = 'users'
-
-    id = Column(
-    Integer, primary_key = True)
-
-    first_name = Column(
-    String(100), nullable = False)
-
-    last_name = Column(
-    String(100), nullable = False)
-
-    picture_url = Column(
-    String(100), nullable = False)
-
-    password_hash = Column(
-    String(100), nullable = False)
 
 
 engine = create_engine('sqlite:///languages.db')
