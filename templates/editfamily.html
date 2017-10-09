@@ -2,12 +2,15 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Delete a language family</title>
+    <title>Edit a language family</title>
   </head>
   <body>
     <h1>Here you can edit the {{family['name']}} language family.</h1>
-    <form action='{{url_for('deleteLanguageFamily', family_id=family['id'])}}' method ='POST'>
-      <input type='text' placeholder='name'>
+    <form action='{{url_for('editLanguageFamily', family_id=family['id'])}}' method ='POST'>
+      <input type='text' name='name' placeholder='name'>
+      <br>
+      <textarea name='description' placeholder='Tell us something interesting'></textarea>
+      <br>
       <input type='submit' value='Submit'>
       <br><br>
     </form>

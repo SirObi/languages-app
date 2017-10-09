@@ -7,7 +7,10 @@
   <body>
     <h1>Here you can add a new language.</h1>
     <form action='{{url_for('addLanguage', family_id=family_id)}}' method ='POST'>
-      <input type='text' placeholder='name'>
+      <input type='text' name='name' placeholder='name'>
+      <br>
+      <textarea name='description' placeholder='Introduce the language'></textarea>
+      <br>
       <input type='submit' value='Submit'>
       <br><br>
     </form>
