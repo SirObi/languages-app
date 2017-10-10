@@ -1,4 +1,4 @@
-from flask import Flask, url_for, render_template, request, redirect
+from flask import Flask, url_for, render_template, request, redirect, jsonify
 from database_setup import Base, LanguageFamily, Language, LanguageTrivium, LearningTip, LearningResource, User
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
@@ -48,7 +48,6 @@ def editLanguageFamily(family_id):
     if request.method == 'POST':
         family.name = request.form['name']
         family.description = request.form['description']
-        family.creator_id = 1
         session.add(family)
         session.commit()
         return redirect(url_for('showLanguageFamily', family_id = family_id))
@@ -66,6 +65,16 @@ def deleteLanguageFamily(family_id):
     else:
         return render_template('deletefamily.html', family=family)
 
+@app.route('/language-families/JSON')
+def languageFamiliesJSON():
+    families = session.query(LanguageFamily).all()
+    return jsonify(LanguageFamilies=[lf.serialize for lf in families])
+
+@app.route('/language-families/<int:family_id>/JSON')
+def languageFamilyJSON(family_id):
+    family = session.query(LanguageFamily).filter_by(id=family_id).one()
+    languages = session.query(Language).filter_by(family_id=family_id).all()
+    return jsonify(LanguageFamily=[family.serialize], Languages=[l.serialize for l in languages])
 
 @app.route('/language-families/<int:family_id>/language/<int:language_id>')
 def showLanguage(family_id, language_id):
@@ -113,10 +122,18 @@ def deleteLanguage(family_id, language_id):
     else:
         return render_template('deletelanguage.html', family_id=family_id, language=language)
 
+@app.route('/language-families/<int:family_id>/language/<int:language_id>/JSON')
+def languageJSON(family_id, language_id):
+    language = session.query(Language).filter_by(id=language_id).one()
+    return jsonify(Language=[language.serialize])
 
 @app.route('/login')
 def showLoginPage():
     return render_template('login.html')
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
 if __name__ == '__main__':
