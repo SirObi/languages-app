@@ -1,4 +1,7 @@
 from flask import Flask, url_for, render_template, request, redirect, jsonify
+from flask import session as login_session
+import random, string
+
 from database_setup import Base, LanguageFamily, Language, LanguageTrivium, LearningTip, LearningResource, User
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
@@ -129,6 +132,8 @@ def languageJSON(family_id, language_id):
 
 @app.route('/login')
 def showLoginPage():
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
+    login_session['state'] = state
     return render_template('login.html')
 
 @app.errorhandler(404)
@@ -137,5 +142,6 @@ def page_not_found(e):
 
 
 if __name__ == '__main__':
+    app.secret_key = 'super_secret_key'
     app.debug = True
     app.run('0.0.0.0', port = 5000)
