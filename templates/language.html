@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
+    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     <title>Learn more about {{language['name']}} language</title>
   </head>
@@ -27,7 +29,7 @@
         </header>
         <section id="language-trivia">
           <div class="col-lg-6">
-            <h3>Fun facts about {{language['name']}}</h3>
+            <h3 id="funFactsTitle">Fun facts about {{language['name']}}</h3>
             {% for trivium in trivia %}
             <p>{{trivium['text']}}</p>
             {% endfor %}
@@ -36,11 +38,12 @@
             <p>{{tip['text']}}</p>
             {% endfor %}
             <h3>Learning resources</h3>
-            <p></p>
+            <ul id="languageResources">
+            </ul>
           </div>
         </section>
       </div>
     </div>
-    <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
+    <script src="/static/wiki.js"></script>
   </body>
 </html>
