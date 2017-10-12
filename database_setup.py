@@ -22,6 +22,16 @@ class User(Base):
     password_hash = Column(
     String(100), nullable = False)
 
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'picture_url': self.picture_url,
+            'password_hash': self.password_hash
+        }
+
 class LanguageFamily(Base):
     __tablename__ = 'language_families'
 
@@ -38,6 +48,16 @@ class LanguageFamily(Base):
     Integer, ForeignKey('users.id'))
 
     creator = relationship(User)
+
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'creator_id': self.creator_id
+        }
+
 
 class Language(Base):
     __tablename__ = 'languages'
@@ -61,6 +81,16 @@ class Language(Base):
 
     creator = relationship(User)
 
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'family_id': self.family_id,
+            'creator_id': self.creator_id
+        }
+
 class LanguageTrivium(Base):
     __tablename__ = 'language_trivia'
 
@@ -68,7 +98,7 @@ class LanguageTrivium(Base):
     Integer, primary_key = True)
 
     text = Column(
-    String(400), nullable = False)
+    String(1000), nullable = False)
 
     language_id = Column(
     Integer, ForeignKey('languages.id'))
@@ -80,6 +110,14 @@ class LanguageTrivium(Base):
 
     creator = relationship(User)
 
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'text': self.text,
+            'language_id': self.language_id,
+            'creator_id': self.creator_id
+        }
 
 class LearningTip(Base):
     __tablename__ = 'learning_tips'
@@ -88,7 +126,7 @@ class LearningTip(Base):
     Integer, primary_key = True)
 
     text = Column(
-    String(400), nullable = False)
+    String(1000), nullable = False)
 
     language_id = Column(
     Integer, ForeignKey('languages.id'))
@@ -100,30 +138,24 @@ class LearningTip(Base):
 
     creator = relationship(User)
 
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'text': self.text,
+            'language_id': self.language_id,
+            'creator_id': self.creator_id
+        }
 
-class LearningResource(Base):
-    __tablename__ = 'learning-resources'
-
-    id = Column(
-    Integer, primary_key = True)
-
-    text = Column(
-    String(80), nullable = False)
-
-    url = Column(
-    String(80), nullable = False)
-
-    language_id = Column(
-    Integer, ForeignKey('languages.id'))
-
-    language = relationship(Language)
-
-    creator_id = Column(
-    Integer, ForeignKey('users.id'))
-
-    creator = relationship(User)
-
-
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'text': self.text,
+            'url': self.url,
+            'language_id': self.language_id,
+            'creator_id': self.creator_id
+        }
 
 engine = create_engine('sqlite:///languages.db')
 Base.metadata.create_all(bind=engine)
