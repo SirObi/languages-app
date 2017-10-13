@@ -164,43 +164,58 @@ DBsession = sessionmaker(bind=engine)
 
 session = DBsession()
 
-user = User(first_name='John', last_name='Smith',
-            picture_url='#', password_hash='12345')
-session.add(user)
-session.commit()
 
-
-for family in language_families:
-    lf = LanguageFamily()
-    lf.name = family['name']
-    lf.description = family['description']
-    lf.creator_id = family['creator_id']
-    session.add(lf)
+def makeInitialUser():
+    user = User(first_name='John', last_name='Smith',
+                picture_url='#', password_hash='12345')
+    session.add(user)
     session.commit()
 
-for language in languages:
-    l = Language()
-    l.name = language['name']
-    l.description = language['description']
-    l.family_id = language['family_id']
-    l.creator_id = language['creator_id']
-    session.add(l)
-    session.commit()
 
-for trivium in trivia:
-    t = LanguageTrivium()
-    t.text = trivium['text']
-    t.language_id = trivium['language_id']
-    t.creator_id = trivium['creator_id']
-    session.add(t)
-    session.commit()
+def populateLanguageFamilies():
+    for family in language_families:
+        lf = LanguageFamily()
+        lf.name = family['name']
+        lf.description = family['description']
+        lf.creator_id = family['creator_id']
+        session.add(lf)
+        session.commit()
 
-for tip in tips:
-    lt = LearningTip()
-    lt.text = tip['text']
-    lt.language_id = tip['language_id']
-    lt.creator_id = tip['creator_id']
-    session.add(lt)
-    session.commit()
+
+def populateLanguages():
+    for language in languages:
+        l = Language()
+        l.name = language['name']
+        l.description = language['description']
+        l.family_id = language['family_id']
+        l.creator_id = language['creator_id']
+        session.add(l)
+        session.commit()
+
+
+def populateTrivia():
+    for trivium in trivia:
+        t = LanguageTrivium()
+        t.text = trivium['text']
+        t.language_id = trivium['language_id']
+        t.creator_id = trivium['creator_id']
+        session.add(t)
+        session.commit()
+
+
+def populateTips():
+    for tip in tips:
+        lt = LearningTip()
+        lt.text = tip['text']
+        lt.language_id = tip['language_id']
+        lt.creator_id = tip['creator_id']
+        session.add(lt)
+        session.commit()
+
+makeInitialUser()
+populateLanguageFamilies()
+populateLanguages()
+populateTrivia()
+populateTips()
 
 print "database populated"

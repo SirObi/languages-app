@@ -16,20 +16,24 @@ from flask import make_response
 
 app = Flask(__name__)
 
-CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
-APPLICATION_NAME = "Languages App"
-
+# Set up connection to database
 engine = create_engine('sqlite:///languages.db')
 
 DBsession = sessionmaker(bind=engine)
 session = DBsession()
 
+# OAuth flow
+CLIENT_ID = json.loads(
+    open('client_secrets.json', 'r').read())['web']['client_id']
+APPLICATION_NAME = "Languages App"
 
-# The Javascript code on the /login page makes a POST request to the route
-# in the request below; the server receives the authorization code
+
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    '''Completes OAuth process after user authentication.
+    Client makes a POST request to /gconnect from the /login
+    page, sending the authorization code to the server.
+    The server then receives and verifies access token from Google.'''
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -113,6 +117,7 @@ def gconnect():
 
 @app.route('/gdisconnect')
 def gdisconnect():
+    '''Handles user logout and revokes Google+ access token'''
     access_token = login_session.get('access_token')
     if access_token is None:
         print 'Access Token is None'
@@ -120,15 +125,10 @@ def gdisconnect():
             json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    print 'In gdisconnect access token is %s', access_token
-    print 'User name is: '
-    print login_session['username']
     url = 'https://accounts.google.com/o/oauth2/'
     'revoke?token=%s' % login_session['access_token']
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
-    print 'result is '
-    print result
     if result['status'] == '200':
         del login_session['access_token']
         del login_session['gplus_id']
@@ -143,9 +143,11 @@ def gdisconnect():
             'Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
+# End of OAuth flow
 
 
 def checkName():
+    '''Extracts user's first name from session if name present'''
     if login_session.get('username') is not None:
         user_name = login_session['username'].split(' ')[0]
     else:
@@ -157,7 +159,7 @@ def checkName():
 @app.route('/index')
 @app.route('/language-families')
 def showMainPage():
-    print login_session.get('username')
+    '''Renders index page'''
     user_name = checkName()
     language_families = session.query(LanguageFamily).all()
     return render_template(
@@ -166,6 +168,7 @@ def showMainPage():
 
 @app.route('/language-families/<int:family_id>')
 def showLanguageFamily(family_id):
+    '''Renders page for chosen language family'''
     user_name = checkName()
     family = session.query(LanguageFamily).filter_by(id=family_id).one()
     languages = session.query(Language).filter_by(family_id=family_id).all()
@@ -176,6 +179,7 @@ def showLanguageFamily(family_id):
 
 @app.route('/language-families/new', methods=['GET', 'POST'])
 def addLanguageFamily():
+    '''Handles adding new language families'''
     user_name = checkName()
     if login_session.get('username') is None:
         flash('You need to be logged in to add language families')
@@ -197,6 +201,7 @@ def addLanguageFamily():
 
 @app.route('/language-families/<int:family_id>/edit', methods=['GET', 'POST'])
 def editLanguageFamily(family_id):
+    '''Handles editing language families'''
     user_name = checkName()
     if login_session.get('username') is None:
         flash('You need to be logged in to make changes to your entries')
@@ -219,6 +224,7 @@ def editLanguageFamily(family_id):
 @app.route('/language-families/<int:family_id>/delete',
            methods=['GET', 'POST'])
 def deleteLanguageFamily(family_id):
+    '''Handles deleting language families'''
     user_name = checkName()
     if login_session.get('username') is None:
         flash('You need to be logged in to make changes to your entries')
@@ -238,12 +244,14 @@ def deleteLanguageFamily(family_id):
 
 @app.route('/language-families/JSON')
 def languageFamiliesJSON():
+    '''Returns JSON with all Language Families'''
     families = session.query(LanguageFamily).all()
     return jsonify(LanguageFamilies=[lf.serialize for lf in families])
 
 
 @app.route('/language-families/<int:family_id>/JSON')
 def languageFamilyJSON(family_id):
+    '''Returns JSON for requested LanguageFamily resource'''
     family = session.query(LanguageFamily).filter_by(id=family_id).one()
     languages = session.query(Language).filter_by(family_id=family_id).all()
     return jsonify(LanguageFamily=[family.serialize],
@@ -265,6 +273,7 @@ def showLanguage(family_id, language_id):
 @app.route('/language-families/<int:family_id>/language/new',
            methods=['GET', 'POST'])
 def addLanguage(family_id):
+    '''Handles adding new languages'''
     user_name = checkName()
     if login_session.get('username') is None:
         flash('You need to be logged in to add languages')
@@ -306,6 +315,7 @@ def addLanguage(family_id):
 @app.route('/language-families/<int:family_id>/language/'
            '<int:language_id>/edit', methods=['GET', 'POST'])
 def editLanguage(family_id, language_id):
+    '''Handles editing languages'''
     user_name = checkName()
     if login_session.get('username') is None:
         flash('You need to be logged in to make changes to your entries')
@@ -329,6 +339,7 @@ def editLanguage(family_id, language_id):
     '/language-families/<int:family_id>/language/<int:language_id>/delete',
     methods=['GET', 'POST'])
 def deleteLanguage(family_id, language_id):
+    '''Handles deleting languages'''
     user_name = checkName()
     if login_session.get('username') is None:
         flash('You need to be logged in to make changes to your entries')
@@ -347,12 +358,14 @@ def deleteLanguage(family_id, language_id):
 @app.route('/language-families/<int:family_id>/language/'
            '<int:language_id>/JSON')
 def languageJSON(family_id, language_id):
+    '''Returns JSON for requested Language resource'''
     language = session.query(Language).filter_by(id=language_id).one()
     return jsonify(Language=[language.serialize])
 
 
 @app.route('/login')
 def showLoginPage():
+    '''Renders login page'''
     user_name = checkName()
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
@@ -362,6 +375,7 @@ def showLoginPage():
 
 @app.errorhandler(404)
 def page_not_found(e):
+    '''Renders 404 page'''
     return render_template('404.html'), 404
 
 
