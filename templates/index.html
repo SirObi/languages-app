@@ -2,21 +2,58 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>The Language App - share your passion!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
+    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <title></title>
   </head>
   <body>
-    <header>
-      <a href='{{url_for('showLoginPage')}}'>Login</a>
-      <h1>Welcome, user!</h1>
-      <p>Pick a language family you are interested in.</p>
-    </header>
-    <section id="language-families">
-      <ul>
-      {% for family in language_families %}
-      <li><a href='{{url_for('showLanguageFamily', family_id=family['id'])}}'>{{family['name']}}</a></li>
-      {% endfor %}
-    </ul>
-      <a href='{{url_for('addLanguageFamily')}}'>Add new language family</a>
-    </section>
+    <div class=container>
+      <div class="navbar navbar-light bg-faded">
+        <div class="header clearfix">
+          <nav>
+            <ul class="nav nav-pills float-right">
+              <li class="nav-item">
+                {% if user_name == 'Guest' %}
+                <a class="nav-link active" href="/login">Login</a>
+                {% else %}
+                <a class="nav-link active" href="/gdisconnect">Logout</a>
+                {% endif %}
+              </li>
+            </ul>
+          </nav>
+          <h3 class="text-muted">Welcome, {{user_name}}</h3>
+        </div>
+      </div>
+
+      <div class="jumbotron">
+        <h2>The Languages App</h2>
+        <p class="lead">Pick a language family you are interested in.</p>
+        <p><a class="btn btn-lg btn-success" href="{{url_for('addLanguageFamily')}}" role="button">Or add a new family</a></p>
+
+        <section id="language-families">
+          <div class="row marketing">
+              {% for family in language_families %}
+              <div class="col-lg-4 text-center">
+                <a href='{{url_for('showLanguageFamily', family_id=family['id'])}}'>
+                <div class="card">
+                  <button type="button" class="btn btn-lg">
+                  <p>{{family['name']}}</p>
+                  </button>
+                </div>
+                </a>
+              </div>
+              {% endfor %}
+          </div>
+        </div>
+        </section>
+
+        <footer class="footer">
+          <p>SirObi 2017</p>
+        </footer>
+    </div>
   </body>
 </html>

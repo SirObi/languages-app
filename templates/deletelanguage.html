@@ -2,15 +2,42 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
+    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     <title>Delete a language</title>
   </head>
   <body>
-    <h1>Are you sure you want to delete {{language['name']}} language?</h1>
-    <form action = '{{url_for('deleteLanguage', family_id=family_id, language_id=language['id'])}}' method ='POST'>
-      <input type='submit' value='Yes'>
-      <br><br>
-    </form>
-    <a href='{{url_for('showLanguageFamily', family_id=family_id)}}'>Go back to language family page</a>
+    <div class="navbar navbar-light bg-faded">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills float-right">
+            <li class="nav-item">
+              {% if user_name == 'Guest' %}
+              <a class="nav-link active" href="/login">Login</a>
+              {% else %}
+              <a class="nav-link active" href="/gdisconnect">Logout</a>
+              {% endif %}
+            </li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Welcome, {{user_name}}</h3>
+      </div>
+    </div>
+
+    <div class='jumbotron'>
+      <div class="col-md-6 offset-md-3 text-center">
+        <h1>Are you sure you want to delete {{language['name']}} language?</h1>
+        <form action = '{{url_for('deleteLanguage', family_id=family_id, language_id=language['id'])}}' method ='POST'>
+          <input type='submit' class="btn btn-warning" value='Yes'>
+          <br><br>
+        </form>
+        <a href='{{url_for('showLanguageFamily', family_id=family_id)}}'>Go back to language family page</a>
+      </div>
+    </div>
   </body>
 
 </html>

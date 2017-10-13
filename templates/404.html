@@ -2,18 +2,45 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
+    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     <title>The Language App - share your passion!</title>
   </head>
   <body>
-    <header>
-      <a href='{{url_for('showLoginPage')}}'>Login</a>
-      <h1>Sorry, friend!</h1>
-      <p>The requested page doesn't exist.</p>
-      <p>You can hit the Back button in your browser</p>
-      <p>or ask your nearest Scottish engineer for a ride to the mothership.</p>
-    </header>
-    <section id="link-homepage">
-      <a href='{{url_for('showMainPage')}}'>Beam me up, Scotty!</a>
-    </section>
+    <div class=container>
+      <div class="navbar navbar-light bg-faded">
+        <div class="header clearfix">
+          <nav>
+            <ul class="nav nav-pills float-right">
+              <li class="nav-item">
+                {% if user_name == 'Guest' %}
+                <a class="nav-link active" href="/login">Login</a>
+                {% else %}
+                <a class="nav-link active" href="/gdisconnect">Logout</a>
+                {% endif %}
+              </li>
+            </ul>
+          </nav>
+          <h3 class="text-muted">Certainly not Kansas</h3>
+        </div>
+      </div>
+
+    <div class='jumbotron'>
+      <div class="col-md-6 offset-md-3 text-center">
+          <h1>Sorry, friend!</h1>
+          <div class="card">
+            <div class="card-block">
+              The requested page doesn't exist. </br>
+              You can hit the Back button in your browser, or ask your nearest Scottish engineer for a ride to the mothership.
+            </div>
+          </div>
+          <br/>
+          <a href='{{url_for('showMainPage')}}'>Beam me up, Scotty!</a>
+      </div>
+    </div>
   </body>
 </html>

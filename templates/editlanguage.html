@@ -2,19 +2,58 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
+    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     <title>Edit a language</title>
   </head>
   <body>
-    <h1>Here you can edit {{language['name']}} language.</h1>
-    <form action='{{url_for('editLanguage', family_id=family_id, language_id=language['id'])}}' method ='POST'>
-      <input type='text' name='name' placeholder='name'>
-      <br>
-      <textarea name='description' placeholder='Tell us something interesting'></textarea>
-      <br>
-      <input type='submit' value='Submit'>
-      <br><br>
-    </form>
-    <a href='{{url_for('showLanguageFamily', family_id=family_id)}}'>Back to language family page</a>
-  </body>
+    <div class="container">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills float-right">
+            <li class="nav-item">
+              {% if user_name == 'Guest' %}
+              <a class="nav-link active" href="/login">Login</a>
+              {% else %}
+              <a class="nav-link active" href="/gdisconnect">Logout</a>
+              {% endif %}
+            </li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Welcome, {{user_name}}</h3>
+      </div>
 
+      <div class="jumbotron">
+        <div class="col-md-6 offset-md-3">
+          <h1 class="text-center">Here you can edit {{language['name']}} language.</h1><br/>
+          <form action='{{url_for('editLanguage', family_id=family_id, language_id=language['id'])}}' method ='POST'>
+            <div class="form-group">
+              <label for='name'>Name</label>
+              <input type='text' class='form-control' name='name' id='name' placeholder='name'>
+            </div>
+            <div class="form-group">
+              <label for='description'>Description</label>
+              <textarea name='description' class='form-control' id='description' placeholder='Introduce the language'></textarea>
+            </div>
+            <div class="form-group">
+              <label for='trivium'>Fun fact</label>
+              <input type='text' class='form-control' name='trivium' placeholder='Tell us a fun fact about the language'>
+            </div>
+            <div class="form-group">
+              <label for='tip'>Learning tip</label>
+              <input type='text' class='form-control' name='tip' placeholder='Any learning tips?'>
+            </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+              <br/><br/>
+              <a href='{{url_for('showLanguageFamily', family_id=family_id)}}'>Back to language family page</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
