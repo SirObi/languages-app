@@ -30,6 +30,17 @@
       </div>
 
       <div class="jumbotron">
+        <section id="flashMessages">
+          <div class = 'flash'>
+              {% with messages = get_flashed_messages() %}
+              {% if messages %}
+              {% for message in messages %}
+                <p> <strong> {{ message }} </strong> </>
+              {% endfor %}
+              {% endif %}
+              {% endwith %}
+          </div>
+        </section>
         <h2>The Languages App</h2>
         <p class="lead">Pick a language family you are interested in.</p>
         <p><a class="btn btn-lg btn-success" href="{{url_for('addLanguageFamily')}}" role="button">Or add a new family</a></p>

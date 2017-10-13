@@ -24,8 +24,9 @@ engine = create_engine('sqlite:///languages.db')
 DBsession = sessionmaker(bind=engine)
 session = DBsession()
 
-# the Javascript code on the login page makes a POST request to this route
-# in this request, the server receives the authorization code
+
+# The Javascript code on the /login page makes a POST request to the route
+# in the request below; the server receives the authorization code
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Validate state token
@@ -105,8 +106,6 @@ def gconnect():
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    flash("you are now logged in as %s" % login_session['username'])
-    print "done!"
     return output
 
 @app.route('/gdisconnect')
@@ -139,36 +138,34 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-@app.route('/bootstrap')
-def showBoostrap():
+def checkName():
     if login_session.get('username') != None:
         user_name = login_session['username'].split(' ')[0]
     else:
         user_name = 'Guest'
-    language_families = session.query(LanguageFamily).all()
-    return render_template('bootstrap-example.html', language_families=language_families, user_name=user_name)
+    return user_name
 
 @app.route('/')
 @app.route('/index')
 @app.route('/language-families')
 def showMainPage():
-    if login_session.get('username') != None:
-        user_name = login_session['username'].split(' ')[0]
-    else:
-        user_name = 'guest'
+    print login_session.get('username')
+    user_name = checkName()
     language_families = session.query(LanguageFamily).all()
     return render_template('index.html', language_families=language_families, user_name=user_name)
 
 
 @app.route('/language-families/<int:family_id>')
 def showLanguageFamily(family_id):
+    user_name = checkName()
     family = session.query(LanguageFamily).filter_by(id=family_id).one()
     languages = session.query(Language).filter_by(family_id=family_id).all()
-    return render_template('language-family.html', family=family, languages=languages)
+    return render_template('language-family.html', family=family, languages=languages, user_name=user_name)
 
 
 @app.route('/language-families/new', methods=['GET', 'POST'])
 def addLanguageFamily():
+    user_name = checkName()
     if login_session.get('username') == None:
         flash('You need to be logged in to add language families')
         return redirect('/login')
@@ -181,15 +178,15 @@ def addLanguageFamily():
         newFamily.creator_id = 1
         session.add(newFamily)
         session.commit()
-        # the above line will have to be changed in the future
-        # when we start using the session object
+        flash('Language family successfully added')
         return redirect(url_for('showMainPage'))
     else:
-        return render_template('addfamily.html')
+        return render_template('addfamily.html', user_name=user_name)
 
 
 @app.route('/language-families/<int:family_id>/edit', methods=['GET', 'POST'])
 def editLanguageFamily(family_id):
+    user_name = checkName()
     if login_session.get('username') == None:
         flash('You need to be logged in to make changes to your entries')
         return redirect('/login')
@@ -201,13 +198,15 @@ def editLanguageFamily(family_id):
         family.description = request.form['description']
         session.add(family)
         session.commit()
+        flash('Language family successfully edited')
         return redirect(url_for('showLanguageFamily', family_id = family_id))
     else:
-        return render_template('editfamily.html', family=family)
+        return render_template('editfamily.html', family=family, user_name=user_name)
 
 
 @app.route('/language-families/<int:family_id>/delete', methods=['GET', 'POST'])
 def deleteLanguageFamily(family_id):
+    user_name = checkName()
     if login_session.get('username') == None:
         flash('You need to be logged in to make changes to your entries')
         return redirect('/login')
@@ -217,9 +216,10 @@ def deleteLanguageFamily(family_id):
     if request.method =='POST':
         session.delete(family)
         session.commit()
+        flash('Language family successfully deleted')
         return redirect(url_for('showMainPage'))
     else:
-        return render_template('deletefamily.html', family=family)
+        return render_template('deletefamily.html', family=family, user_name=user_name)
 
 @app.route('/language-families/JSON')
 def languageFamiliesJSON():
@@ -234,14 +234,16 @@ def languageFamilyJSON(family_id):
 
 @app.route('/language-families/<int:family_id>/language/<int:language_id>')
 def showLanguage(family_id, language_id):
+    user_name = checkName()
     language = session.query(Language).filter_by(id=language_id).one()
     tips = session.query(LearningTip).filter_by(language_id=language_id).all()
     trivia = session.query(LanguageTrivium).filter_by(language_id=language_id).all()
-    return render_template('language.html', family_id=family_id, language=language, tips=tips, trivia=trivia)
+    return render_template('language.html', family_id=family_id, language=language, tips=tips, trivia=trivia, user_name=user_name)
 
 
 @app.route('/language-families/<int:family_id>/language/new', methods=['GET', 'POST'])
 def addLanguage(family_id):
+    user_name = checkName()
     if login_session.get('username') == None:
         flash('You need to be logged in to add languages')
         return redirect('/login')
@@ -255,7 +257,6 @@ def addLanguage(family_id):
         new_language.family_id = family_id
         session.add(new_language)
         session.commit()
-
         # Returns last language added to database
         last_language = session.query(Language).order_by(Language.id.desc()).first()
 
@@ -272,13 +273,15 @@ def addLanguage(family_id):
         session.add(new_trivium)
         session.add(new_tip)
         session.commit()
+        flash('Language successfully added')
         return redirect(url_for('showLanguageFamily', family_id=family_id))
     else:
-        return render_template('addlanguage.html', family_id=family_id)
+        return render_template('addlanguage.html', family_id=family_id, user_name=user_name)
 
 
 @app.route('/language-families/<int:family_id>/language/<int:language_id>/edit', methods=['GET', 'POST'])
 def editLanguage(family_id, language_id):
+    user_name = checkName()
     if login_session.get('username') == None:
         flash('You need to be logged in to make changes to your entries')
         return redirect('/login')
@@ -290,12 +293,14 @@ def editLanguage(family_id, language_id):
         language.description = request.form['description']
         session.add(language)
         session.commit()
+        flash('Language successfully edited')
         return redirect(url_for('showLanguageFamily', family_id=family_id))
     else:
-        return render_template('editlanguage.html', family_id=family_id, language=language)
+        return render_template('editlanguage.html', family_id=family_id, language=language, user_name=user_name)
 
 @app.route('/language-families/<int:family_id>/language/<int:language_id>/delete', methods=['GET', 'POST'])
 def deleteLanguage(family_id, language_id):
+    user_name = checkName()
     if login_session.get('username') == None:
         flash('You need to be logged in to make changes to your entries')
         return redirect('/login')
@@ -303,9 +308,10 @@ def deleteLanguage(family_id, language_id):
     if request.method =='POST':
         session.delete(language)
         session.commit()
+        flash('Language successfully deleted')
         return redirect(url_for('showLanguageFamily', family_id=family_id))
     else:
-        return render_template('deletelanguage.html', family_id=family_id, language=language)
+        return render_template('deletelanguage.html', family_id=family_id, language=language, user_name=user_name)
 
 @app.route('/language-families/<int:family_id>/language/<int:language_id>/JSON')
 def languageJSON(family_id, language_id):
@@ -314,9 +320,10 @@ def languageJSON(family_id, language_id):
 
 @app.route('/login')
 def showLoginPage():
+    user_name = checkName()
     state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
     login_session['state'] = state
-    return render_template('login.html', STATE=state)
+    return render_template('login.html', STATE=state, user_name=user_name)
 
 @app.errorhandler(404)
 def page_not_found(e):
