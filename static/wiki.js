@@ -12,8 +12,16 @@ $(function wiki(){
       success: function(response) {
         var entries = response[1];
         language = entries[0];
-        var url = 'http://en.wikipedia.org/wiki/' + language;
-        $('#languageResources').append('<li><a href="' + url + '">' + language + '</a></li>');
+        
+        if(language == undefined){
+          $('#languageResources').append('<li>Wikipedia does not know this language ;)</li>');
+        } else {
+          var url = 'http://en.wikipedia.org/wiki/' + language;
+          $('#languageResources').append('<li><a href="' + url + '">' + language + '</a></li>');
+        }
+      },
+      error: function(){
+        $('#languageResources').append('<li>Wikipedia is not available ;(</li>');
       }
     });
   }
