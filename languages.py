@@ -119,14 +119,15 @@ def gconnect():
 def gdisconnect():
     '''Handles user logout and revokes Google+ access token'''
     access_token = login_session.get('access_token')
+    print access_token
     if access_token is None:
         print 'Access Token is None'
         response = make_response(
             json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    url = 'https://accounts.google.com/o/oauth2/'
-    'revoke?token=%s' % login_session['access_token']
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+    print url
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
     if result['status'] == '200':
