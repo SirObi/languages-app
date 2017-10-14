@@ -1,6 +1,10 @@
 # languages-app
 Flask app for sharing your passion for languages with others
 
+This project is still in progress.
+You can see how it works here:
+![alt text](https://github.com/SirObi/languages-app/blob/master/Language_App_-_how_it_works.gif "How the app works")
+
 ## Prerequisites
 
 Language: this app is written in Python 2.
