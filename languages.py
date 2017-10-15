@@ -77,7 +77,6 @@ def gconnect():
     if result['issued_to'] != CLIENT_ID:
         response = make_response(
             json.dumps("Token's client ID does not match app's."), 401)
-        print "Token's client ID does not match app's."
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -119,15 +118,12 @@ def gconnect():
 def gdisconnect():
     '''Handles user logout and revokes Google+ access token'''
     access_token = login_session.get('access_token')
-    print access_token
     if access_token is None:
-        print 'Access Token is None'
         response = make_response(
             json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
-    print url
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
     if result['status'] == '200':
@@ -136,10 +132,16 @@ def gdisconnect():
         del login_session['username']
         del login_session['email']
         del login_session['picture']
-        response = make_response(json.dumps('Successfully disconnected.'), 200)
+        response = make_response(json.dumps('Successfully disconnected.'), 302)
         response.headers['Content-Type'] = 'application/json'
+        response.headers['Location'] = '/'
         return response
     else:
+        del login_session['access_token']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
         response = make_response(json.dumps(
             'Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
@@ -185,8 +187,6 @@ def addLanguageFamily():
     if login_session.get('username') is None:
         flash('You need to be logged in to add language families')
         return redirect('/login')
-    if login_session.get('username') is None:
-        return redirect('/login')
     if request.method == 'POST':
         newFamily = LanguageFamily()
         newFamily.name = request.form['name']
@@ -206,8 +206,6 @@ def editLanguageFamily(family_id):
     user_name = checkName()
     if login_session.get('username') is None:
         flash('You need to be logged in to make changes to your entries')
-        return redirect('/login')
-    if login_session.get('username') is None:
         return redirect('/login')
     family = session.query(LanguageFamily).filter_by(id=family_id).one()
     if request.method == 'POST':
@@ -229,8 +227,6 @@ def deleteLanguageFamily(family_id):
     user_name = checkName()
     if login_session.get('username') is None:
         flash('You need to be logged in to make changes to your entries')
-        return redirect('/login')
-    if login_session.get('username') is None:
         return redirect('/login')
     family = session.query(LanguageFamily).filter_by(id=family_id).one()
     if request.method == 'POST':
@@ -279,8 +275,6 @@ def addLanguage(family_id):
     if login_session.get('username') is None:
         flash('You need to be logged in to add languages')
         return redirect('/login')
-    if login_session.get('username') is None:
-        return redirect('/login')
     if request.method == 'POST':
         new_language = Language()
         new_language.name = request.form['name']
@@ -320,8 +314,6 @@ def editLanguage(family_id, language_id):
     user_name = checkName()
     if login_session.get('username') is None:
         flash('You need to be logged in to make changes to your entries')
-        return redirect('/login')
-    if login_session.get('username') is None:
         return redirect('/login')
     language = session.query(Language).filter_by(id=language_id).one()
     if request.method == 'POST':
