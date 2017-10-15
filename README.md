@@ -2,7 +2,8 @@
 Flask app for sharing your passion for languages with others
 
 This project is still in progress.
-You can see how it works here:
+You can see how it works here:  
+
 ![alt text](https://github.com/SirObi/languages-app/blob/master/How_the_app_works.gif "How the app works")
 
 ## Prerequisites
