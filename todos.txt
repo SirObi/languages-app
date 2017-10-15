@@ -1,0 +1,23 @@
+1. Handle NoneType returns from query
+
+Use one_or_none() function instead of one() for SQLAlchemy queries:
+
+@app.route('/language-families/<int:family_id>')
+def showLanguageFamily(family_id):
+    '''Renders page for chosen language family'''
+    user_name = checkName()
+    family = session.query(LanguageFamily).filter_by(id=family_id).one()
+
+
+2. Create decorators for the following functionality:
+- verifying if user logged in
+- ensuring requested entity id exists in database
+- ensuring user owns a particular entity
+
+3. Make the creator id the id of the currently logged-in user
+
+4. Use SQLALchemy's LargeBinary class to store images in database
+
+5. Use JavaScript to validate user input for each web form
+
+6. Gather feedback on current website layout
