@@ -26,6 +26,7 @@ When I send a request for <resource>
 Then the request fails
   And I receive a relevant error message
 
+Examples:
 | resource                  |
 | list of language families |
 | language family           |

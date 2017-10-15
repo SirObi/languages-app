@@ -4,10 +4,12 @@ As a guest
 I would like to be able to explore the website without logging in
 So that I can quickly find out whether it’s something I’m interested in
 
-Background
+Background:
 Given I am not logged in
   And I can see a generic greeting
   And I can proceed to login page
+  But I cannot log out
+
 
 Scenario: User without login arrives at homepage
 Given I am on homepage
@@ -37,10 +39,13 @@ When I select <option>
 Then I am directed to login page
 
 Examples:
-| option           |
-| Add new language |
-| Edit language    |
-| Delete language  |
+| option                  |
+| Add new language        |
+| Delete language         |
+| Edit language           |
+| Delete language family  |
+| Edit language family    |
+
 
 
 Scenario: User views language page
