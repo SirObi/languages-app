@@ -60,3 +60,22 @@ cd to the directory which contains `languages.py`.
 Open up your browser and go to the following URL:  
 `http://localhost:5000`
 
+## Documentation  
+If you'd like to learn how the app is supposed to work, see  
+the following files:  
+https://github.com/SirObi/languages-app/tree/master/features/step-definitions  
+
+These files are written in the spirit of Behaviour Driven Development (BDD),  
+using a language called Gherkin.  
+BDD is an approach to software development that aims to radically improve communication  
+between developers and non-tech personnel. 
+
+### What's so great about BDD and Gherkin? 
+They eliminate ambiguity from the software planning process.  
+They achieve this by forcing you to:  
+• place yourself in the shoes of the user  
+• use a very precise language to describe what the app should do
+
+### Do people use BDD?
+Yes! Check out this example from the British retail company Marks&Spencer:  
+https://cucumber.io/blog/2015/07/31/gerwyn-jenkins-marks-and-spencer
