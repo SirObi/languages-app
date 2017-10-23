@@ -17,7 +17,7 @@ from flask import make_response
 app = Flask(__name__)
 
 # Set up connection to database
-engine = create_engine('sqlite:///languages.db')
+engine = create_engine('postgresql:///languages')
 
 DBsession = sessionmaker(bind=engine)
 session = DBsession()

@@ -157,5 +157,5 @@ class LearningTip(Base):
             'creator_id': self.creator_id
         }
 
-engine = create_engine('sqlite:///languages.db')
+engine = create_engine('postgresql:///languages')
 Base.metadata.create_all(bind=engine)

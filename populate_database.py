@@ -158,7 +158,7 @@ tips = [
     ]
 
 
-engine = create_engine('sqlite:///languages.db')
+engine = create_engine('postgresql:///languages')
 
 DBsession = sessionmaker(bind=engine)
 
